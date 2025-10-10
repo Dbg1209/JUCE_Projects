@@ -1,0 +1,61 @@
+# ========================================
+# JUCE Windows Gitignore
+# Works for Apps, Plugins, Libraries
+# Projucer & CMake builds
+# ========================================
+
+# Build directories (auto-generated)
+Builds/
+build/
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.lib
+*.pdb
+*.vst3
+*.aaxplugin
+*.component
+
+# Projucer temporary files
+*.jucer~
+
+# JUCE cache and IDE/project files
+*.suo
+*.user
+*.userprefs
+*.VC.db
+*.VC.VC.opendb
+
+# Intermediate / compiled object files
+*.o
+*.obj
+*.pch
+*.tlog
+*.lastbuildstate
+*.log
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# IDE folders
+.idea/
+.vscode/
+*.code-workspace
+
+# Temporary or backup files
+*~
+*.tmp
+*.bak
+Thumbs.db
+
+# Audio / temporary exports
+*.wav
+*.aiff
+*.mp3
+*.flac
