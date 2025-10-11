@@ -53,7 +53,7 @@ public:
     MainContentComponent()
     {
         setSize (800, 600);
-        setFramesPerSecond(24); //Remember, constructor is the header [1] this sets the FPS of the animation and restart the re-paint process at that given frequency 
+        setFramesPerSecond(60); //Remember, constructor is the header [1] this sets the FPS of the animation and restart the re-paint process at that given frequency 
         
     }
 
@@ -70,13 +70,13 @@ public:
         g.setColour(getLookAndFeel().findColour(Slider::thumbColourId)); // [2] This sets the colour of the circle to be draw
 
         //Creating a path for the animation
-        auto numberOfDots = 15; //Here we define the number of dots to create the path
+        auto numberOfDots = 20; //Here we define the number of dots to create the path
         juce::Path spinePath; //Juce object to create open or closed shapes and uses coordinates to set starting and path points
         
         for (auto i = 0; i < numberOfDots; ++i) // For loop to create the Point object (offseting the animation for every next point)
         {
         //Define the radius of the circle to be draw
-        int radius = 150; 
+        auto radius = 100 + 10 * std::sin (getFrameCounter() * 0.1f + i * 0.5f); 
         
         //This "Point" is a 2D coordinate class, which represent the position of the center of the shape at the given timeframe (with an xy float precision)
         // So, this point is called "p" as the variable
@@ -84,7 +84,10 @@ public:
         //that is done by dividing the width and height of the screen by two
         //Then offset the x and y coordinates of the shape by adding the radius value to both of them 
         //The addition of (float) i * 0.12f, allows to update the position of the Point based on the numberOfDots for the spinePath
-        juce::Point<float> p((float) getWidth() / 2.0f + 1.0f * (float) radius * std::sin((float) getFrameCounter() * 0.04f + (float) i * 0.12f),(float) getHeight() / 2.0f + 1.0f * (float) radius * std::cos ((float) getFrameCounter() * 0.04f + (float) i * 0.12f));
+        juce::Point<float> p((float) getWidth() / 2.0f + 1.0f * radius * std::cos(getFrameCounter() * 0.04f +  i * 0.12f),(float) getHeight() / 2.0f + 1.0f * radius * std::sin (getFrameCounter() * 0.04f + i * 0.12f));
+
+        //This will create circles on the points that are being connected
+        g.fillEllipse(p.x - i, p.y - i, 2.0f + 2.0f * i, 2.0f + 2.0f * i); 
 
         if (i == 0)
             {
