@@ -5,6 +5,7 @@
 # ========================================
 
 # Build directories (auto-generated)
+**Builds/
 Builds/
 build/
 bin/
@@ -17,6 +18,7 @@ out/
 *.vst3
 *.aaxplugin
 *.component
+**JuceLibraryCode
 
 # Projucer temporary files
 *.jucer~
