@@ -74,8 +74,6 @@ private:
     juce::Atomic<bool> parametersChanged{ false };
 
     MonoChain monoChain;
-
-
 };
 
 //==============================================================================
@@ -95,8 +93,6 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     SimpleEQAudioProcessor& audioProcessor;
-
-    // juce::Atomic<bool> parametersChanged{ false };
 
     RotarySliderWithLabels peakFreqSlider,
                            peakGainSlider,
