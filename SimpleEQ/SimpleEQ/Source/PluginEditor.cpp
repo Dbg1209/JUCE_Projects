@@ -18,10 +18,12 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, i
 
     //Here to change colours later xd
 
-    g.setColour(Colour(94u, 136u, 209u));
+    auto enabled = slider.isEnabled();
+
+    g.setColour(enabled ? Colour(94u, 136u, 209u) : Colours::darkgrey);
     g.fillEllipse(bounds);
 
-    g.setColour(Colour(35u, 53u, 84u));
+    g.setColour(enabled ? Colour(35u, 53u, 84u) : Colours::grey);
     g.drawEllipse(bounds, 1.f);
 
 
@@ -121,7 +123,6 @@ void LookAndFeel::drawToggleButton(juce::Graphics& g,
 
         g.strokePath(analyzerButton->randomPath, PathStrokeType(1.f));
     }
-
 }
 
 
@@ -635,6 +636,42 @@ SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcess
     highcutBypassButton.setLookAndFeel(&lnf);
 
     analyzerEnabledButton.setLookAndFeel(&lnf);
+
+    auto safePtr = juce::Component::SafePointer<SimpleEQAudioProcessorEditor>(this);
+    peakBypassButton.onClick = [safePtr]()
+        {
+            if (auto* comp = safePtr.getComponent())
+            {
+                auto bypassed = comp->peakBypassButton.getToggleState();
+
+                comp->peakFreqSlider.setEnabled(!bypassed);
+                comp->peakGainSlider.setEnabled(!bypassed);
+                comp->peakQualitySlider.setEnabled(!bypassed);
+            }
+        };
+
+    lowcutBypassButton.onClick = [safePtr]()
+        {
+            if (auto* comp = safePtr.getComponent())
+            {
+                auto bypassed = comp->lowcutBypassButton.getToggleState();
+
+                comp->lowCutFreqSlider.setEnabled(!bypassed);
+                comp->lowCutSlopeSlider.setEnabled(!bypassed);
+            }
+        };
+
+    highcutBypassButton.onClick = [safePtr]()
+        {
+            if (auto* comp = safePtr.getComponent())
+            {
+                auto bypassed = comp->highcutBypassButton.getToggleState();
+
+                comp->highCutFreqSlider.setEnabled(!bypassed);
+                comp->highCutSlopeSlider.setEnabled(!bypassed);
+            }
+        };
+
 
     setSize (600, 480);
 }
