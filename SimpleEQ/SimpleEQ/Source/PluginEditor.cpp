@@ -309,11 +309,16 @@ void PathProducer::process(juce::Rectangle<float> fftBounds, double sampleRate)
 
 void ResponseCurveComponent::timerCallback()
 {
+   
+    if (shouldShowFFTAnalysis)
+    {
     auto fftBounds = getAnalysisArea().toFloat();
     auto sampleRate = audioProcessor.getSampleRate();
 
     leftPathProducer.process(fftBounds, sampleRate);
     rightPathProducer.process(fftBounds, sampleRate);
+    }
+    
 
 
     if (parametersChanged.compareAndSetBool(false, true))
@@ -421,6 +426,9 @@ void ResponseCurveComponent::paint(juce::Graphics& g)
         responseCurve.lineTo(responseArea.getX() + i, map(mags[i]));
     }
 
+    if (shouldShowFFTAnalysis)
+    {
+
     auto leftChannelFFTPath = leftPathProducer.getPath();
 
     leftChannelFFTPath.applyTransform(AffineTransform().translation(responseArea.getX(), responseArea.getY()));
@@ -434,6 +442,7 @@ void ResponseCurveComponent::paint(juce::Graphics& g)
     g.setColour(Colours::yellow);
     g.strokePath(rightChannelFFTPath, PathStrokeType(1.f));
 
+    }
 
     g.setColour(Colours::orange);
     g.drawRoundedRectangle(getRenderArea().toFloat(), 4.f, 1.f);
@@ -672,6 +681,14 @@ SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcess
             }
         };
 
+    analyzerEnabledButton.onClick = [safePtr]()
+        {
+            if (auto* comp = safePtr.getComponent())
+            {
+                auto enabled = comp->analyzerEnabledButton.getToggleState();
+                comp->responseCurveComponent.toggleAnalysisEnablement(enabled);
+            }
+        };
 
     setSize (600, 480);
 }
