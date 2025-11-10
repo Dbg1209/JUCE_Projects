@@ -91,10 +91,16 @@ void LookAndFeel::drawToggleButton(juce::Graphics& g,
         
         size -= 6;
         
+        const auto center = r.getCentre();
+        const float radius = (size * 0.5f);
+        const float x = center.getX();
+        const float y1 = center.getY();
+        const float y2 = center.getY() - radius;
+
         powerButton.addCentredArc(r.getCentreX(), 
                                   r.getCentreY(), 
-                                  size * 0.5, 
-                                  size * 0.5, 
+                                  radius, 
+                                  radius, 
                                   0.f, 
                                   degreesToRadians(ang), 
                                   degreesToRadians(350.f - ang),
@@ -110,6 +116,8 @@ void LookAndFeel::drawToggleButton(juce::Graphics& g,
         g.setColour(color);
         g.strokePath(powerButton, pst);
         g.drawEllipse(r, 2);
+        g.drawLine(x, y1, x, y2, 4.0f);
+       
     }
 
     else if (auto* analyzerButton = dynamic_cast<AnalyzerButton*>(&toggleButton))
