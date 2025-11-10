@@ -597,8 +597,8 @@ SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcess
     peakQualitySlider(*audioProcessor.apvts.getParameter("Peak Quality"), ""),
     lowCutFreqSlider(*audioProcessor.apvts.getParameter("LowCut Freq"), "Hz"),
     highCutFreqSlider(*audioProcessor.apvts.getParameter("HighCut Freq"), "Hz"),
-    lowCutSlopeSlider(*audioProcessor.apvts.getParameter("LowCut Slope"), "dB/Oct"),
-    highCutSlopeSlider(*audioProcessor.apvts.getParameter("HighCut Slope"), "dB/Oct"),
+    lowCutSlopeSlider(*audioProcessor.apvts.getParameter("Lowcut Slope"), "dB/Oct"),
+    highCutSlopeSlider(*audioProcessor.apvts.getParameter("Highcut Slope"), "dB/Oct"),
 
 
     responseCurveComponent(audioProcessor),
@@ -607,8 +607,8 @@ SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcess
     peakQualitySliderAttachment(audioProcessor.apvts, "Peak Quality", peakQualitySlider),
     lowCutFreqSliderAttachment(audioProcessor.apvts, "LowCut Freq", lowCutFreqSlider),
     highCutFreqSliderAttachment(audioProcessor.apvts, "HighCut Freq",highCutFreqSlider),
-    lowCutSlopeSliderAttachment(audioProcessor.apvts, "LowCut Slope",lowCutSlopeSlider),
-    highCutSlopeSliderAttachment(audioProcessor.apvts, "HighCut Slope", highCutSlopeSlider),
+    lowCutSlopeSliderAttachment(audioProcessor.apvts, "Lowcut Slope",lowCutSlopeSlider),
+    highCutSlopeSliderAttachment(audioProcessor.apvts, "Highcut Slope", highCutSlopeSlider),
 
     lowcutBypassButtonAttachment(audioProcessor.apvts, "LowCut Bypassed", lowcutBypassButton),
     peakBypassButtonAttachment(audioProcessor.apvts, "Peak Bypassed", peakBypassButton),
