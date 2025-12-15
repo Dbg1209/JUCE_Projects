@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="CCK1NM" name="SimpleEQ" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginVST3Category="EQ,Fx"
-              pluginManufacturer="Daniel Bazurto">
+              pluginManufacturer="Daniel Bazurto" cppLanguageStandard="latest">
   <MAINGROUP id="ORYA8D" name="SimpleEQ">
     <GROUP id="{C0C042A7-A7C0-8F23-20DB-FC2ABEC6D473}" name="Source">
       <FILE id="eYP3Z6" name="PluginProcessor.cpp" compile="1" resource="0"
