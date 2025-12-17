@@ -66,7 +66,7 @@ void UpperToLower(std::string& str)
 void PascalTriangle()
 {
     int totalRows = 5;
-    int currentRow = 0;
+    int currentRow;
     
     int row1[] = {1};
     int row2[] = { 1, 1 };
@@ -83,19 +83,25 @@ void PascalTriangle()
         numToDisplay[2][1] = numToDisplay[1][0] + numToDisplay[1][1];
         numToDisplay[2][2] = 1;
         numToDisplay[3][0] = 1; 
-       
-        
+        numToDisplay[3][1] = numToDisplay[2][0] + numToDisplay[2][1];
+		numToDisplay[3][2] = numToDisplay[2][1] + numToDisplay[2][2];
+		numToDisplay[3][3] = 1;
+
+		//Aplicando coeficientes de binomios.... (a+ b)^n, siendo aqui n el currentRow, que a su vez tiene que ser el i para saltar de fila cuando ya este... 
             
-        for (int i = 0; i <= totalRows; i++)
+        for (currentRow = 0; currentRow <= totalRows; currentRow++)
         {
-            for (int j = 0; j < i; j++)
+            int spaces = (totalRows - currentRow);
+            for (int s = 0; s < spaces; s++)
             {
-                numToDisplay[i][j] = {};
-                std::cout << numToDisplay[i][j] << ' ';
+                std::cout << ' ';
+            }
+            for (int j = 0; j <= currentRow; j++)
+            {
+                std::cout << numToDisplay[currentRow][j] << ' ';
 
             }
             std::cout << std::endl;
-            currentRow++;
         }
     }
 }
