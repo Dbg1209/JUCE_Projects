@@ -65,29 +65,27 @@ void UpperToLower(std::string& str)
 
 void PascalTriangle()
 {
-    int totalRows = 5;
+    int totalRows;
     int currentRow;
+
+	std::cout << "Enter a whole number between 1 and 20 to for a Pascal's Triangle: ";
+	std::cin >> totalRows;
     
-    int row1[] = {1};
-    int row2[] = { 1, 1 };
-    int row3[] = { 1, row2[0] + row2[1], 1 };
-    int row4[] = { 1, row3[0] + row3[1], row3[1] + row3[2] };
 
-    if (totalRows >= 1 && totalRows <= 20)
+    if (totalRows >= 1 || totalRows <= 20)
     {
-        int numToDisplay[20][20];
-        numToDisplay[0][0] = 1;
-        numToDisplay[1][0] = 1;
-        numToDisplay[1][1] = 1;
-        numToDisplay[2][0] = 1;
-        numToDisplay[2][1] = numToDisplay[1][0] + numToDisplay[1][1];
-        numToDisplay[2][2] = 1;
-        numToDisplay[3][0] = 1; 
-        numToDisplay[3][1] = numToDisplay[2][0] + numToDisplay[2][1];
-		numToDisplay[3][2] = numToDisplay[2][1] + numToDisplay[2][2];
-		numToDisplay[3][3] = 1;
+        int numToDisplay[21][21];
 
-		//Aplicando coeficientes de binomios.... (a+ b)^n, siendo aqui n el currentRow, que a su vez tiene que ser el i para saltar de fila cuando ya este... 
+        for (int i = 0; i <= totalRows; i++)
+        {
+            numToDisplay[i][0] = 1;
+            for (int j = 1; j < i; j++)
+            {
+                numToDisplay[i][j] = numToDisplay[i - 1][j - 1] + numToDisplay[i - 1][j];
+            }
+            numToDisplay[i][i] = 1;
+	    }
+
             
         for (currentRow = 0; currentRow <= totalRows; currentRow++)
         {
@@ -96,14 +94,18 @@ void PascalTriangle()
             {
                 std::cout << ' ';
             }
-            for (int j = 0; j <= currentRow; j++)
+            for (int k = 0; k <= currentRow; k++)
             {
-                std::cout << numToDisplay[currentRow][j] << ' ';
+                std::cout << numToDisplay[currentRow][k] << ' ';
 
             }
             std::cout << std::endl;
         }
     }
+    else 
+    {
+        std::cout << "That's not a number between 1 and 20, buddy." << std::endl;
+	}
 }
 
 
