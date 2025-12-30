@@ -108,9 +108,101 @@ void PascalTriangle()
 	}
 }
 
+//Class on Inheritance
+
+class Employee
+{
+private:
+    std::string name;
+    std::string employeeID;
+
+public:
+    Employee(std::string n = "", std::string e = "") { name = n; employeeID = e; };
 
 
-int main()
+    void setEmployeeName(std::string newName) { name = newName; };
+    void setEmployeeID(std::string newID) { employeeID = newID; };
+    std::string getEmployeeName() { return name; };
+    std::string getEmployeeID() { return employeeID; };
+};
+
+class FullTimeEmployee : public Employee
+{
+private: 
+    float salary;
+    bool fullTime = true;
+public:
+    FullTimeEmployee(std::string n, std::string e, float s, bool isFullTime) : Employee (n, e)
+    {
+        setEmployeeName(n);
+        setEmployeeID(e);
+        salary = s;
+        fullTime = isFullTime;
+    };
+
+    void setSalary(float newSalary) { salary = newSalary; };
+    float getSalary() { return salary; };
+};
+
+class PartTimeEmployee : public Employee
+{
+private:
+    float wage;
+    bool partTime = true;
+
+public:
+    PartTimeEmployee(std::string n, std::string e, float s, bool isPartTime)
+    {
+        setEmployeeName(n);
+        setEmployeeID(e);
+        wage = s;
+        partTime = isPartTime;
+    };
+
+    void setDailyWage(float newWage) { wage = newWage; };
+    float getDailyWage() { return wage; };
+    float getMonthlyWage(int workedDays) { return wage * workedDays; };
+   
+};
+
+//Class on Polymorphism
+
+class Shape
+{
+public:
+    virtual float Area() = 0; 
+    virtual float Perimeter() = 0;
+
+};
+
+class Rectangle : public Shape
+{
+private:
+    float length;
+    float breadth;
+
+public: 
+    Rectangle(float l = 1, float b = 1) { length = l; breadth = b; }
+
+    float Area() { return length * breadth; }
+    float Perimeter() { return 2 * (length + breadth); }
+};
+
+class Circle : public  Shape
+{
+private:
+    float radius;
+
+public:
+    Circle(float r = 1.f) { radius = r; }
+
+    float Area() { return 3.1416f * (radius * radius); }
+    float Perimeter() { return 2 * 3.1416f * (radius); }
+
+};
+
+
+void main()
 {
     std::cout << "Hello World!\n";
 
@@ -149,5 +241,15 @@ int main()
 
     PascalTriangle();
 
-    return 0;
+    // Pure Virtual Class 
+    Shape *c = new Rectangle(15, 20);
+
+    std::cout << "Area of this rectangle is " << c->Area() << std::endl;
+    std::cout << "Perimeter of this rectangle is " << c->Perimeter() << std::endl;
+
+    c = new Circle(30);
+
+    std::cout << "Area of this circle is " << c->Area() << std::endl;
+    std::cout << "Perimeter of this circle is " << c->Perimeter() << std::endl;
+
 }
