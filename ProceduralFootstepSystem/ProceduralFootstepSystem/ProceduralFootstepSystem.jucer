@@ -9,6 +9,10 @@
       <FILE id="eXiPTW" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>
+    <FILE id="eH0KLm" name="FootstepSystem.cpp" compile="1" resource="0"
+          file="Source/FootstepSystem.cpp"/>
+    <FILE id="IhztJ8" name="FootstepSystem.h" compile="0" resource="0"
+          file="Source/FootstepSystem.h"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>

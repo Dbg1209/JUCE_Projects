@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "FootstepSystem.h"
 
 //==============================================================================
 /*
@@ -27,6 +28,10 @@ private:
     //==============================================================================
     // Your private member variables go here...
 
+	double currentSampleRate = 0.0;
+	int currentBlockSize = 0;
+
+	FootstepSystem footstepSystem;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
