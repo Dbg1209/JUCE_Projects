@@ -23,9 +23,17 @@ FootstepSystem::~FootstepSystem()
 void FootstepSystem::prepare(double sampleRate, int samplesPerBlock)
 {
     // Implementation
+
+	currentSampleRate = sampleRate;
+	currentBlockSize = samplesPerBlock;
+
+	isPrepared = true;
 }
 
 void FootstepSystem::process(juce::AudioBuffer<float>& buffer)
 {
     // Implementation
+
+    if (!isPrepared)
+        return;
 }

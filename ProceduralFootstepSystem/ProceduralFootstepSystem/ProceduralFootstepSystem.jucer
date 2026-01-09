@@ -5,14 +5,14 @@
   <MAINGROUP id="WO8PXg" name="ProceduralFootstepSystem">
     <GROUP id="{882CA336-6AC5-9486-A28B-21ECAE1E3421}" name="Source">
       <FILE id="KpxeTT" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="IhztJ8" name="FootstepSystem.h" compile="0" resource="0"
+            file="Source/FootstepSystem.h"/>
+      <FILE id="eH0KLm" name="FootstepSystem.cpp" compile="1" resource="0"
+            file="Source/FootstepSystem.cpp"/>
       <FILE id="vNxF4B" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="eXiPTW" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>
-    <FILE id="eH0KLm" name="FootstepSystem.cpp" compile="1" resource="0"
-          file="Source/FootstepSystem.cpp"/>
-    <FILE id="IhztJ8" name="FootstepSystem.h" compile="0" resource="0"
-          file="Source/FootstepSystem.h"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
