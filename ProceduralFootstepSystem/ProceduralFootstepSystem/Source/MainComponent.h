@@ -2,12 +2,17 @@
 
 #include <JuceHeader.h>
 #include "FootstepSystem.h"
+#include "FootstepParameters.h"
 
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
+
+// Global Footstep Parameters Source
+
+
 class MainComponent  : public juce::AudioAppComponent
 {
 public:
@@ -31,6 +36,7 @@ private:
 	double currentSampleRate = 0.0;
 	int currentBlockSize = 0;
 
+    FootstepParameters footstepParameters;
 	FootstepSystem footstepSystem;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

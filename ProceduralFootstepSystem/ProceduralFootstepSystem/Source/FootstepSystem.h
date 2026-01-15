@@ -10,6 +10,7 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include "FootstepParameters.h"
 
 class FootstepSystem
 {
@@ -22,7 +23,8 @@ public:
 	void prepare(double sampleRate, int samplesPerBlock);
 
 	// Called every audio callback
-	void process(juce::AudioBuffer<float>& buffer);
+	void process(juce::AudioBuffer<float>& buffer,
+				 const FootstepParameters& parameters);
 	
 
 private:
@@ -32,4 +34,12 @@ private:
 
 	//Prepared flag
 	bool isPrepared = false;
+
+	//Smoothed runtime parameters
+
+	float smoothedSpeed = 0.0f;
+	float smoothedWeight = 0.0f;
+	float smoothedCloth = 0.0f;
+
+	
 };

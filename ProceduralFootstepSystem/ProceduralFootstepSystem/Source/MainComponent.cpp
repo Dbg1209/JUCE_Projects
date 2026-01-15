@@ -54,7 +54,7 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     // (to prevent the output of random noise)
     bufferToFill.clearActiveBufferRegion();
 
-	footstepSystem.process(*bufferToFill.buffer);
+	footstepSystem.process(*bufferToFill.buffer, footstepParameters);
 }
 
 void MainComponent::releaseResources()
@@ -79,4 +79,10 @@ void MainComponent::resized()
     // This is called when the MainContentComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
+
+	//Placeholder logic for update parameters from GUI
+    footstepParameters.speed.store(2.5f);
+    footstepParameters.weight.store(1.2f);
+    footstepParameters.clothIntensity.store(0.6f);
+
 }
