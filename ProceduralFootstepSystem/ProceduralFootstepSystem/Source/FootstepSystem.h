@@ -12,6 +12,13 @@
 #include <JuceHeader.h>
 #include "FootstepParameters.h"
 
+enum class FootstepType
+{
+	Sneak,
+	Walk,
+	Run
+};
+
 class FootstepSystem
 {
 public:
@@ -41,5 +48,41 @@ private:
 	float smoothedWeight = 0.0f;
 	float smoothedCloth = 0.0f;
 
-	
+	// Determine footstep type based on speed
+
+	FootstepType getFootstepType(float speed) const;
+
+	static constexpr float sneakStepRate = 1.6f; // steps/second
+	static constexpr float walkStepRate = 2.4f;  
+	static constexpr float runStepRate = 3.2f;   
+
+	//Step timing 
+
+	float stepPhase = 0.0f;
+
+	void advanceStepPhase(float stepRate);
+
+	//Detect Step Event
+
+	bool consumeStep();
+
+	// Convert step type to rate
+	float getStepRateForType(FootstepType type) const;
+
+	// Trigger footstep sound & variables
+
+	void triggerFootstep(FootstepType type);
+
+	float footstepEnergy = 0.0f;
+	float footstepRandom = 0.0f;
+
+	FootstepType currentFootstepType = FootstepType::Walk;
+
+	juce::Random random;
+
+	//For avoiding triggers when not moving
+
+	static constexpr float minMovementSpeed = 0.05f;
+
+
 };
