@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "FootstepParameters.h"
+#include "FootstepVoice.h"
 
 enum class FootstepType
 {
@@ -18,6 +19,7 @@ enum class FootstepType
 	Walk,
 	Run
 };
+
 
 class FootstepSystem
 {
@@ -35,6 +37,7 @@ public:
 	
 
 private:
+
 	//Audio Configuration
 	double currentSampleRate = 0.0;
 	int currentBlockSize = 0;
@@ -84,5 +87,12 @@ private:
 
 	static constexpr float minMovementSpeed = 0.05f;
 
+	//Get footstep voice Reference
+
+	FootstepVoice footstepVoice;
+
+	//Decode Surface Type
+	
+	//static float surfaceToBrightness(SurfaceType surface);
 
 };

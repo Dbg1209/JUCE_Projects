@@ -20,6 +20,14 @@ struct FootstepParameters
 	// Clothing Layers
 	std::atomic<float> clothIntensity{ 0.0f }; // 0 = none, 1 = heavy
 
-	// Surface type
+	// Surface type;
 	std::atomic<int> surfaceType{ 0 };     // enum index for surface type (later to be replaced with enum class)
+};
+
+enum class SurfaceType : int
+{
+	Concrete = 0,
+	Grass = 1,
+	Metal = 2,
+	Water = 3
 };

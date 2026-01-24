@@ -10,6 +10,18 @@
 
 #include "FootstepSystem.h"
 
+static float surfaceToBrightness(SurfaceType surface)
+{
+    switch (surface)
+    {
+    case SurfaceType::Concrete: return 1.0f;
+    case SurfaceType::Grass:    return 0.3f;
+    case SurfaceType::Metal:    return 1.2f;
+    case SurfaceType::Water:    return 0.15f;
+    default:                    return 1.0f;
+    }
+}
+
 FootstepSystem::FootstepSystem()
 {
     // Constructor implementation (if needed)
@@ -43,6 +55,15 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
 	float currentWeight = parameters.weight.load();
 	float clothAmount = parameters.clothIntensity.load();
 
+	//get surface type as int for now
+	const int surfaceIndex = parameters.surfaceType.load(std::memory_order_relaxed);
+
+	//Convert surface index to int for now (future: use enum class)
+	SurfaceType surface = static_cast <SurfaceType>(surfaceIndex);
+
+    //Set Surface Amount
+	const float surfaceAmount = surfaceToBrightness(surface);
+
 	//Parameter Smoothing Per Block
     constexpr float smoothing = 0.05f;
 
@@ -67,7 +88,9 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
 
     if (consumeStep())
     {
-        triggerFootstep(currentType);
+       footstepVoice.trigger(smoothedWeight,
+                             surfaceAmount, // Placeholder for surface type
+		                     smoothedCloth);
         
     }
 
@@ -77,6 +100,12 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
 		stepPhase = 0.0f;
         return;
     }
+
+	//Process Footstep Voice
+
+    footstepVoice.process(buffer,
+                          0,
+		                  buffer.getNumSamples());
    
 }
 
@@ -132,3 +161,5 @@ void FootstepSystem::triggerFootstep(FootstepType type)
      - Reset envelope
      - Excite resonator */
 }
+
+
