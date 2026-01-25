@@ -89,10 +89,15 @@ private:
 
 	//Get footstep voice Reference
 
-	FootstepVoice footstepVoice;
+	static constexpr int maxFootstepVoices = 8; //Set a max number of voices
+	FootstepVoice voices[maxFootstepVoices]; //Pass the nax number of voices as an array pool, for re-use
 
-	//Decode Surface Type
+	//Get free voices from the pool
 	
+	FootstepVoice* getFreeVoice();
+	
+	
+	//Decode Surface Type	
 	//static float surfaceToBrightness(SurfaceType surface);
 
 };

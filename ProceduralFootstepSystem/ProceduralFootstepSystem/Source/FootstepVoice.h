@@ -21,7 +21,7 @@ public:
     void process(juce::AudioBuffer<float>& buffer,
                  int startSample,
 		         int numSamples);
-	bool isActive() const;
+    bool isActive() const;
 
 private:
 	//Get reference for sample rate

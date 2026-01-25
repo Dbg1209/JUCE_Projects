@@ -10,6 +10,18 @@
 
 #include "FootstepSystem.h"
 
+FootstepVoice* FootstepSystem::getFreeVoice()
+{
+    for (auto& voice : voices)
+    {
+        if (!voice.isActive())
+        {
+            return &voice;
+        }
+    }
+    return &voices[0];
+}
+
 static float surfaceToBrightness(SurfaceType surface)
 {
     switch (surface)
@@ -38,6 +50,11 @@ void FootstepSystem::prepare(double sampleRate, int samplesPerBlock)
 
 	currentSampleRate = sampleRate;
 	currentBlockSize = samplesPerBlock;
+
+    for (auto& voice : voices)
+    {
+        voice.prepare(sampleRate);
+    }
 
 	isPrepared = true;
 }
@@ -88,9 +105,13 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
 
     if (consumeStep())
     {
-       footstepVoice.trigger(smoothedWeight,
+        if (auto* voice = getFreeVoice())
+        {
+        voice->trigger(smoothedWeight,
                              surfaceAmount, // Placeholder for surface type
 		                     smoothedCloth);
+
+        }
         
     }
 
@@ -103,10 +124,17 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
 
 	//Process Footstep Voice
 
-    footstepVoice.process(buffer,
-                          0,
-		                  buffer.getNumSamples());
-   
+    for (auto& voice : voices)
+    {
+        if (voice.isActive())
+        {
+
+        voice.process(buffer,
+                      0,
+		              buffer.getNumSamples());
+        }
+    }
+
 }
 
 FootstepType FootstepSystem::getFootstepType (float speed) const
