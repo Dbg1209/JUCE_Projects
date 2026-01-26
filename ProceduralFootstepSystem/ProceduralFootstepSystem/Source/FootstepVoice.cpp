@@ -14,6 +14,9 @@
 void FootstepVoice::prepare(double sampleRate)
 {
     currentSampleRate = sampleRate;
+
+    filterCoeff = 0.5f;
+    filterState = 0.0f;
 }
 
 void FootstepVoice::trigger(float weight,
@@ -22,6 +25,8 @@ void FootstepVoice::trigger(float weight,
 {
 	//Initialize envelope and decay based on weight
 	envelope = 1.0f;
+
+
 	envelopeDecay = juce::jmap(weight, 
                                0.0f,    
                                1.0f, 
@@ -34,43 +39,94 @@ void FootstepVoice::trigger(float weight,
 	surfaceAmount = surface;
 	clothAmount = cloth;
 
+    //Calculate filter coefficient based on surface brightness
+
+    float cutoffHz = juce::jmap(surfaceAmount,
+                           0.0f,
+                           1.0f,
+                           800.0f,   
+                           6000.0f);
+
+    //cConvert cutoff freq to filter coef
+    float omega = juce::MathConstants<float>::twoPi * cutoffHz / static_cast<float>(currentSampleRate);
+    filterCoeff = 1.0f - std::exp(-omega);
+
+    //Limit coef to a safe range
+    filterCoeff = juce::jlimit(0.01f, 0.99f, filterCoeff);
+
+    //Reset filter for next step
+    filterState = 0.f;
 }
 
 void FootstepVoice::process(juce::AudioBuffer<float>& buffer,
     int startSample,
     int numSamples)
 {
-    //Decay envelope per sample
-    envelope *= envelopeDecay;
 
-    if (envelope < 0.0001f)
+    const int numChannels = buffer.getNumChannels();
+    const int endSample = startSample + numSamples;
+
+
+    //Process each sample
+    for (int sample = startSample; sample < endSample; ++sample)
     {
-        active = false;
+        //Generate raw impact noise
+        float rawNoise = randomFloat() * 2.f - 1.f;
+
+        //Scale by envelope
+        float impact = rawNoise * envelope;
+
+        //Scale by weight (heavier = louder)
+        impact *= juce::jmap(weightAmount,
+                             0.0f,
+                             1.0f,
+                             0.2f, //light footsteps
+                             1.2f);//Heavier footsteps
+
+        //Applying surface filters
+
+        filterState += filterCoeff * (impact - filterState);
+        float filteredImpact = filterState;
+
+        //Generate Cloth Noise
+
+        float clothNoise = (randomFloat() * 2.0f - 1.0f) * clothAmount * envelope * 0.3f;
+
+        //Combine Layers and send to Buffer
+
+        float finalSample = filteredImpact + clothNoise;
+
+        //Soft clipping to prevent digital clipping
+
+        finalSample = std::tanh(finalSample);
+
+        for (int channel = 0; channel < numChannels; ++channel)
+        {
+            buffer.addSample(channel, sample, finalSample);
+        }
+
+        //Decay envelope (Fadeout)
+        envelope *= envelopeDecay;
+
+        if (envelope < 0.0001f)
+        {
+            active = false;
+            break;
+        }
     }
-
-	//Impact Noise Generation
-    float impact = random.nextFloat() * 2.0f - 1.0f; // Random impact variation
-    impact *= envelope;
-    impact *= juce::jmap(weightAmount,
-                         0.0f,
-                         1.0f,
-                         0.2f,
-                         1.2f);
-
-    //Suface Filtering
-
-    float cutoff = juce::jmap(surfaceAmount,
-                              0.0f,
-                              1.0f,
-                              2000.0f,
-		                      8000.0f);
-
-	//Cloth Noise Generation
-	float clothNoise = (random.nextFloat() * 2.0f - 1.0f) * clothAmount * envelope * 0.3f;
-
 }
 
 bool FootstepVoice::isActive() const
 {
     return active;
+}
+
+float FootstepVoice::randomFloat()
+{
+    // std::minstd_rand is a simple linear congruential generator
+    // It's fast and doesn't use any locks or shared state
+    randomGen = (randomGen * 48271) % 2147483647;
+
+    // Convert to 0.0 to 1.0 range
+    return static_cast<float>(randomGen) / 2147483647.0f;
 }

@@ -24,22 +24,30 @@ public:
     bool isActive() const;
 
 private:
-	//Get reference for sample rate
+	//Reference for sample rate
     double currentSampleRate = 0.0;
 
-    //Sets Envelope parameters
+    //Envelope parameters
 
     float envelope = 0.0f;
     float envelopeDecay = 0.0f;
 	bool active = false;
 
 	//Random generator for variation
-	juce::Random random;
+    uint32_t randomGen = 1;
+
+    //Helper function for generating random floats
+    float randomFloat();
 
 	//Cache parameter values for current footstep
 
     float weightAmount = 1.0f;
     float surfaceAmount = 0.0f;
     float clothAmount = 0.0f;
+
+    //Filter state for surface
+
+    float filterState = 0.0f;
+    float filterCoeff = 0.5f;
 };  
 

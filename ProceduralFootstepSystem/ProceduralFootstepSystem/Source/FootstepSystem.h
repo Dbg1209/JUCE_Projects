@@ -51,53 +51,29 @@ private:
 	float smoothedWeight = 0.0f;
 	float smoothedCloth = 0.0f;
 
-	// Determine footstep type based on speed
-
-	FootstepType getFootstepType(float speed) const;
-
-	static constexpr float sneakStepRate = 1.6f; // steps/second
-	static constexpr float walkStepRate = 2.4f;  
-	static constexpr float runStepRate = 3.2f;   
 
 	//Step timing 
-
 	float stepPhase = 0.0f;
-
 	void advanceStepPhase(float stepRate);
-
-	//Detect Step Event
-
 	bool consumeStep();
 
-	// Convert step type to rate
+	// Determine footstep type based on speed
+	FootstepType getFootstepType(float speed) const;
 	float getStepRateForType(FootstepType type) const;
 
-	// Trigger footstep sound & variables
+	//Get footstep voice Reference
+	static constexpr int maxFootstepVoices = 8; //Set a max number of voices
+	FootstepVoice voices[maxFootstepVoices]; //Pass the nax number of voices as an array pool, for re-use
 
+	//Get free voices from the pool
+	FootstepVoice* getFreeVoice();
+
+	// Trigger footstep sound & variables
 	void triggerFootstep(FootstepType type);
 
 	float footstepEnergy = 0.0f;
 	float footstepRandom = 0.0f;
 
 	FootstepType currentFootstepType = FootstepType::Walk;
-
-	juce::Random random;
-
-	//For avoiding triggers when not moving
-
-	static constexpr float minMovementSpeed = 0.05f;
-
-	//Get footstep voice Reference
-
-	static constexpr int maxFootstepVoices = 8; //Set a max number of voices
-	FootstepVoice voices[maxFootstepVoices]; //Pass the nax number of voices as an array pool, for re-use
-
-	//Get free voices from the pool
-	
-	FootstepVoice* getFreeVoice();
-	
-	
-	//Decode Surface Type	
-	//static float surfaceToBrightness(SurfaceType surface);
 
 };

@@ -10,6 +10,13 @@
 
 #include "FootstepSystem.h"
 
+namespace FootstepConstants
+{
+    constexpr float parameterSmoothing = 0.05f;
+    constexpr float minMovementSpeed = 0.05f;
+    constexpr float envSilenceThreshold = 0.0001f; 
+}
+
 FootstepVoice* FootstepSystem::getFreeVoice()
 {
     for (auto& voice : voices)
@@ -19,7 +26,7 @@ FootstepVoice* FootstepSystem::getFreeVoice()
             return &voice;
         }
     }
-    return &voices[0];
+    return &voices[0]; //Right now is stealing the oldest voice (Future improvement to steal the quietest)
 }
 
 static float surfaceToBrightness(SurfaceType surface)
@@ -46,6 +53,14 @@ FootstepSystem::~FootstepSystem()
 
 void FootstepSystem::prepare(double sampleRate, int samplesPerBlock)
 {
+
+    //Parameter Validation
+    if (sampleRate <= 0.0 || samplesPerBlock <= 0)
+    {
+        jassertfalse;
+        return;
+    }
+
     // Implementation
 
 	currentSampleRate = sampleRate;
@@ -68,62 +83,52 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
         return;
 
 	//Retrieve atomic parameters
-	float currentSpeed = parameters.speed.load();
-	float currentWeight = parameters.weight.load();
-	float clothAmount = parameters.clothIntensity.load();
-
-	//get surface type as int for now
+	const float currentSpeed = parameters.speed.load(std::memory_order_relaxed);
+	const float currentWeight = parameters.weight.load(std::memory_order_relaxed);
+	const float clothAmount = parameters.clothIntensity.load(std::memory_order_relaxed);
 	const int surfaceIndex = parameters.surfaceType.load(std::memory_order_relaxed);
 
 	//Convert surface index to int for now (future: use enum class)
 	SurfaceType surface = static_cast <SurfaceType>(surfaceIndex);
-
-    //Set Surface Amount
 	const float surfaceAmount = surfaceToBrightness(surface);
 
-	//Parameter Smoothing Per Block
-    constexpr float smoothing = 0.05f;
+	//Parameter Smoothing Per Block, this is now a Const value FootstepConstants::parameterSmoothing
+    //constexpr float smoothing = 0.05f;
 
-    smoothedSpeed += smoothing * (currentSpeed - smoothedSpeed);
-    smoothedWeight += smoothing * (currentWeight - smoothedWeight);
-    smoothedCloth += smoothing * (clothAmount - smoothedCloth);
+    smoothedSpeed += FootstepConstants::parameterSmoothing * (currentSpeed - smoothedSpeed);
+    smoothedWeight += FootstepConstants::parameterSmoothing * (currentWeight - smoothedWeight);
+    smoothedCloth += FootstepConstants::parameterSmoothing * (clothAmount - smoothedCloth);
 
 
-    //Step Timing integration
-
-    if (smoothedSpeed < 0.5f)
+    //Movement check
+    if (smoothedSpeed < FootstepConstants::minMovementSpeed)
     {
 		stepPhase = 0.0f; // Reset step phase when not moving
         return;
 	}
 
+    //Determine footstep type based on speed
     FootstepType currentType = getFootstepType(smoothedSpeed);
 
+    //Determine Number of steps / second 
     float stepRate = getStepRateForType(currentType);
 
+    //Advance step timing
     advanceStepPhase(stepRate);
 
+    //Check if it's time for a new footstep
     if (consumeStep())
     {
         if (auto* voice = getFreeVoice())
         {
         voice->trigger(smoothedWeight,
-                             surfaceAmount, // Placeholder for surface type
+                             surfaceAmount,
 		                     smoothedCloth);
-
         }
         
     }
 
-	//Avoiding triggers when not moving
-    if (smoothedSpeed < minMovementSpeed)
-    {
-		stepPhase = 0.0f;
-        return;
-    }
-
 	//Process Footstep Voice
-
     for (auto& voice : voices)
     {
         if (voice.isActive())
@@ -134,7 +139,6 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
 		              buffer.getNumSamples());
         }
     }
-
 }
 
 FootstepType FootstepSystem::getFootstepType (float speed) const
@@ -181,10 +185,7 @@ void FootstepSystem::triggerFootstep(FootstepType type)
 
 	footstepEnergy = 1.0f;
 
-    //Micro-variation placeholder
-	footstepRandom = random.nextFloat();
-
-    /*future hooks :
+     /*future hooks :
      - Select surface
      - Reset envelope
      - Excite resonator */
