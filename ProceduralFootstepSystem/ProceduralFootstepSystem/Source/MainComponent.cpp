@@ -7,6 +7,12 @@ MainComponent::MainComponent()
     // you add any child components.
     setSize (800, 600);
 
+    //Placeholder logic for update parameters from GUI
+    footstepParameters.speed.store(2.5f, std::memory_order_relaxed);
+    footstepParameters.weight.store(1.2f, std::memory_order_relaxed);
+    footstepParameters.clothIntensity.store(0.6f, std::memory_order_relaxed);
+    footstepParameters.surfaceType.store(0, std::memory_order_relaxed);
+
     // Some platforms require permissions to open input channels so request that here
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
         && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
@@ -80,9 +86,6 @@ void MainComponent::resized()
     // If you add any child components, this is where you should
     // update their positions.
 
-	//Placeholder logic for update parameters from GUI
-    footstepParameters.speed.store(2.5f);
-    footstepParameters.weight.store(1.2f);
-    footstepParameters.clothIntensity.store(0.6f);
+
 
 }
