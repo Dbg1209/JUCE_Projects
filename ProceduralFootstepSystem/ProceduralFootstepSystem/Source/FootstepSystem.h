@@ -51,6 +51,7 @@ private:
 	float smoothedWeight = 0.0f;
 	float smoothedCloth = 0.0f;
 
+	bool isMoving = false;
 
 	//Step timing 
 	float stepPhase = 0.0f;

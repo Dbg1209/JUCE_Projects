@@ -57,6 +57,7 @@ void FootstepSystem::prepare(double sampleRate, int samplesPerBlock)
     //Parameter Validation
     if (sampleRate <= 0.0 || samplesPerBlock <= 0)
     {
+        DBG("ERROR: Invalid audio parameters!");
         jassertfalse;
         return;
     }
@@ -72,6 +73,7 @@ void FootstepSystem::prepare(double sampleRate, int samplesPerBlock)
     }
 
 	isPrepared = true;
+    DBG("FootstepSystem prepared successfully - isPrepared = true");
 }
 
 void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
@@ -100,12 +102,17 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
     smoothedCloth += FootstepConstants::parameterSmoothing * (clothAmount - smoothedCloth);
 
 
+    const bool isMoving = smoothedSpeed >= FootstepConstants::minMovementSpeed;
+
+
     //Movement check
     if (smoothedSpeed < FootstepConstants::minMovementSpeed)
     {
 		stepPhase = 0.0f; // Reset step phase when not moving
         return;
 	}
+  
+    DBG("Speed: " << juce::String(smoothedSpeed) + " Phase: " + juce::String(stepPhase));
 
     //Determine footstep type based on speed
     FootstepType currentType = getFootstepType(smoothedSpeed);
@@ -121,10 +128,21 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
     {
         if (auto* voice = getFreeVoice())
         {
-        voice->trigger(smoothedWeight,
-                             surfaceAmount,
-		                     smoothedCloth);
+       
+            const float clampedWeight = juce::jlimit(0.0f, 1.0f, smoothedWeight);
+            const float clampedSurface = juce::jlimit(0.0f, 1.5f, surfaceAmount);
+            const float clampedCloth = juce::jlimit(0.0f, 1.0f, smoothedCloth);
+
+            voice->trigger(clampedWeight,
+                           clampedSurface,
+		                   clampedCloth);
+            DBG("Voice triggered with clamped values");
         }
+
+        else
+        {
+            DBG("No free voice available to trigger footstep");
+		}
         
     }
 
@@ -133,7 +151,7 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
     {
         if (voice.isActive())
         {
-
+        
         voice.process(buffer,
                       0,
 		              buffer.getNumSamples());

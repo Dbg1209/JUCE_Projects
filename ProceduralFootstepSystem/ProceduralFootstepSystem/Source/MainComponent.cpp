@@ -9,9 +9,12 @@ MainComponent::MainComponent()
 
     //Placeholder logic for update parameters from GUI
     footstepParameters.speed.store(2.5f, std::memory_order_relaxed);
-    footstepParameters.weight.store(1.2f, std::memory_order_relaxed);
+    footstepParameters.weight.store(0.7f, std::memory_order_relaxed);
     footstepParameters.clothIntensity.store(0.6f, std::memory_order_relaxed);
     footstepParameters.surfaceType.store(0, std::memory_order_relaxed);
+
+    DBG("MainComponent Constructor - Parameters Set");
+    DBG("Speed: 2.5, Weight: 0.7, Cloth: 0.4, Surface: 0");
 
     // Some platforms require permissions to open input channels so request that here
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
@@ -39,10 +42,16 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     // This function will be called when the audio device is started, or when
     // its settings (i.e. sample rate, block size, etc) are changed.
 
+    DBG("=== prepareToPlay CALLED ===");
+    DBG("Sample Rate: " + juce::String(sampleRate));
+    DBG("Samples Per Block: " + juce::String(samplesPerBlockExpected));
+
 	currentBlockSize = samplesPerBlockExpected;
 	currentSampleRate = sampleRate;
 
 	footstepSystem.prepare(currentSampleRate, currentBlockSize);
+
+    DBG("FootstepSystem prepared successfully");
 
     // You can use this function to initialise any resources you might need,
     // but be careful - it will be called on the audio thread, not the GUI thread.
