@@ -34,6 +34,29 @@ public:
 	// Called every audio callback
 	void process(juce::AudioBuffer<float>& buffer,
 				 const FootstepParameters& parameters);
+
+	//Visual Feedback Queries
+
+	//Gait to display
+	FootstepType getCurrentGaitType() const{return currentFootstepType;}
+
+	//Current Step Phase (0.0 to 1.0)
+	float getStepPhase() const { return stepPhase; }
+
+	//Number of active voices
+	int getActiveVoiceCount() const
+		{
+		int count = 0;
+		for (const auto& voice: voices)
+		{
+			if (voice.isActive())
+				count++;
+		}
+		return count;
+	}
+
+	//Get smoothed speed to display
+	float getSmoothedSpeed() const { return smoothedSpeed; }
 	
 
 private:

@@ -126,6 +126,8 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
     //Check if it's time for a new footstep
     if (consumeStep())
     {
+		currentFootstepType = currentType;
+
         if (auto* voice = getFreeVoice())
         {
        
@@ -147,16 +149,19 @@ void FootstepSystem::process(juce::AudioBuffer<float>& buffer,
     }
 
 	//Process Footstep Voice
+    
+	//int activeVoiceCount = 0;
     for (auto& voice : voices)
     {
         if (voice.isActive())
         {
-        
-        voice.process(buffer,
-                      0,
-		              buffer.getNumSamples());
+			//activeVoiceCount++;
+            voice.process(buffer,
+                          0,
+		                  buffer.getNumSamples());
         }
     }
+
 }
 
 FootstepType FootstepSystem::getFootstepType (float speed) const
