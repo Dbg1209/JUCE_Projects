@@ -145,9 +145,9 @@ void MainComponent::timerCallback()
 	juce::String gaitText;
     switch (gait)
     {
-    case 0: gaitText = "Gait: Sneak"; break;
-	case 1: gaitText = "Gait: Walk"; break;
-	case 2: gaitText = "Gait: Run"; break;
+    case 0: gaitText = "Sneak"; break;
+	case 1: gaitText = "Walk"; break;
+	case 2: gaitText = "Run"; break;
 	default: gaitText = "Gait: Unknown"; break;
     }
 
